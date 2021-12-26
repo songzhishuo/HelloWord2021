@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ButtnActivity"
+    android:padding="15dp">
+
+    <Button
+        android:id="@+id/acBtn_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="测试按钮"
+        android:textSize="20sp"
+        android:textColor="#0066FF"
+        android:background="#FF0000">
+
+    </Button>
+
+    <Button
+        android:id="@+id/acBtn_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/acBtn_1"
+        android:layout_marginTop="20dp"
+        android:text="按钮2"
+        android:background="@drawable/bg_btn2">
+    </Button>
+
+    <Button
+        android:id="@+id/acBtn_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/acBtn_2"
+        android:layout_marginTop="20dp"
+        android:text="按键3"
+        android:background="@drawable/bg_btn3">
+
+    </Button>
+
+
+    <Button
+        android:id="@+id/acBtn_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/acBtn_3"
+        android:layout_margin="20dp"
+        android:text="按键4"
+        android:textSize="20sp"
+        android:background="@drawable/bg_btn4">
+
+    </Button>
+</RelativeLayout>
