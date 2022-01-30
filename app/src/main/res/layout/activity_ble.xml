@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BleActivity">
+
+    <TextView
+        android:id="@+id/tv_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="蓝牙开关"
+        android:paddingTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp">
+    </TextView>
+
+    <Button
+        android:id="@+id/acBtn_ble_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="开关"
+        android:layout_below="@id/tv_1">
+    </Button>
+
+    <Button
+        android:id="@+id/acBtn_ble_scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="扫描"
+        android:layout_below="@id/acBtn_ble_switch">
+    </Button>
+
+</RelativeLayout>

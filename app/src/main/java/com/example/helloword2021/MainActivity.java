@@ -19,12 +19,13 @@ public class MainActivity extends AppCompatActivity {
     private Button mBtnRadioBtn;
     private Button mBtnCheckBoxBtn;         //CheckBox
     private Button mBtnImgView;             //ImageView
+    private Button mBtnBleBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mBtnTextView = (Button) findViewById(R.id.Btn_1);
+        mBtnTextView = findViewById(R.id.Btn_1);
         mBtnTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mBtnHello = (Button) findViewById(R.id.Btn_hello);
+        mBtnHello = findViewById(R.id.Btn_hello);
         mBtnHello.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,13 +45,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mBtnEditText = (Button)findViewById(R.id.Btn_2);
+        mBtnEditText = findViewById(R.id.Btn_2);
 
-        mBtnRadioBtn = (Button)findViewById(R.id.Btn_rdBtn);
+        mBtnRadioBtn = findViewById(R.id.Btn_rdBtn);
 
-        mBtnCheckBoxBtn = (Button)findViewById(R.id.Btn_cbBtn);
+        mBtnCheckBoxBtn = findViewById(R.id.Btn_cbBtn);
 
-        mBtnImgView = (Button)findViewById(R.id.Btn_imgBtn);
+        mBtnImgView = findViewById(R.id.Btn_imgBtn);
+
+        mBtnBleBtn = findViewById(R.id.Btn_ble);
+
         this.setListeners();
 
 
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         mBtnRadioBtn.setOnClickListener(onClick);
         mBtnCheckBoxBtn.setOnClickListener(onClick);
         mBtnImgView.setOnClickListener(onClick);
+        mBtnBleBtn.setOnClickListener(onClick);
     }
 
     private class OnClick implements View.OnClickListener{
@@ -87,6 +92,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case (R.id.Btn_imgBtn):
                     intent = new Intent(MainActivity.this, ImageViewActivity.class);
+
+                case (R.id.Btn_ble):
+                    intent = new Intent(MainActivity.this, BleActivity.class);
+
                 default:
                     break;
             }
