@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CheckBoxActivity"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/ckBox_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="你会那种语言"
+        android:textSize="30sp">
+    </TextView>
+
+    <CheckBox
+        android:id="@+id/ckBox_title_android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Android"
+        android:textSize="20sp"
+        android:layout_below="@id/ckBox_title">
+    </CheckBox>
+
+    <CheckBox
+        android:id="@+id/ckBox_title_ios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="IOS"
+        android:textSize="20sp"
+        android:layout_below="@id/ckBox_title_android">
+    </CheckBox>
+
+    <CheckBox
+        android:id="@+id/ckBox_title_H5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="H5"
+        android:textSize="20sp"
+        android:layout_below="@id/ckBox_title_ios">
+    </CheckBox>
+
+    <CheckBox
+        android:id="@+id/ckBox_title_Other"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Other"
+        android:textSize="20sp"
+        android:layout_below="@id/ckBox_title_H5">
+    </CheckBox>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/ckBox_title_Other">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="你的兴趣"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp">
+        </TextView>
+
+        <CheckBox
+            android:id="@+id/ckBox_title_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="编程"
+            android:button="@drawable/bg_checkbox"
+            android:checked="false"
+            android:paddingLeft="10dp"
+            android:textSize="20sp">
+        </CheckBox>
+        <CheckBox
+            android:id="@+id/ckBox_title_cook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="做饭"
+            android:textSize="20sp"
+            android:checked="true"
+            android:paddingLeft="10dp"
+            android:button="@drawable/bg_checkbox">
+        </CheckBox>
+
+    </LinearLayout>
+</RelativeLayout>

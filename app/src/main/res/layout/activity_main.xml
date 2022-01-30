@@ -36,4 +36,25 @@
         android:layout_height="wrap_content"
         android:text="EditTest">
     </Button>
+
+    <Button
+        android:id="@+id/Btn_rdBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RadioButton">
+    </Button>
+
+    <Button
+        android:id="@+id/Btn_cbBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CheckBox">
+    </Button>
+
+    <Button
+        android:id="@+id/Btn_imgBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ImageView">
+    </Button>
 </LinearLayout>

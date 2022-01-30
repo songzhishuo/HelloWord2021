@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RadioButtonActivity"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/rdBtn_text_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hello RadioButton"
+        android:textSize="30sp">
+
+    </TextView>
+    
+    
+    <RadioGroup
+        android:id="@+id/rdGroup_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rdBtn_text_1"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rdBtn_boy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="男生"
+            android:checked="true"
+            android:textSize="16sp"
+            android:textColor="#FF6600"
+            android:layout_below="@id/rdBtn_text_1">
+        </RadioButton>
+
+        <RadioButton
+            android:id="@+id/rdBtn_girl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="女生"
+            android:textSize="16sp"
+            android:textColor="#FF6600"
+            android:layout_below="@id/rdBtn_boy">
+
+        </RadioButton>
+        
+    </RadioGroup>
+    
+    <RadioGroup
+        android:id="@+id/rdGroup_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/rdGroup_1"
+        android:layout_marginTop="20dp">
+
+        <RadioButton
+            android:id="@+id/rdBtn_boy2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_orange_radio_btn"
+            android:button="@null"
+            android:text="男生"
+            android:checked="true"
+            android:textSize="16sp">
+
+        </RadioButton>
+            
+        <RadioButton
+            android:id="@+id/rdBtn_girl2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="女生"
+            android:textSize="16sp"
+            android:button="@null"
+            android:background="@drawable/selector_orange_radio_btn">
+
+        </RadioButton>
+        
+        
+    </RadioGroup>
+        
+        
+        
+</RelativeLayout>
