@@ -19,6 +19,7 @@ public class ButtnActivity extends AppCompatActivity {
         myBtn_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Toast.makeText(ButtnActivity.this, "Btn3 is check", Toast.LENGTH_SHORT).show();
             }
         });
