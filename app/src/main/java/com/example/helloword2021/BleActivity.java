@@ -8,6 +8,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
@@ -20,29 +22,44 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.view.View.OnClickListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 
 public class BleActivity extends AppCompatActivity {
-
+    private BytesHexStrTranslate bytesHexStrTranslate;              //HEX String 转换
 
     private Button btn_open_ble;
     private Button btn_scan_ble;
     private Button btn_connect_ble;
     private Button btn_disconnect_ble;
+    private Button btn_send_ble;
+    private EditText edit_send_ble_data;
+    private EditText edit_get_ble_data;
+
     private ListView listView_ble_scan;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt = null;
     private BluetoothDevice btDevice = null;                /*需要连接的设备*/
+    private BluetoothGattService mBluetoothGattService;
+    private BluetoothGattCharacteristic  mWriteCharacteristic;
+    private BluetoothGattCharacteristic  mNotifyCharacteristic;
+    //    BluetoothGattService  mBluetoothGattService
+    private String SERVICESUUID = "00000002-0000-1000-8000-00805f9b34fb";
+    private String WRITEUUID = "00002a00-0000-1000-8000-00805f9b34fb";
+    private String NOTIFYUUID = "00002a00-0000-1000-8000-00805f9b34fb";
+//    00002aba-0000-1000-8000-00805f9b34fb
 
-    private List btNameList;
-    private List btAddrList;
+    private List btNameList = null;
+    private List btAddrList = null;
     private ArrayList<BluetoothDevice> btDevList = new ArrayList<BluetoothDevice>();;
 
     private Boolean bleAdapterState = Boolean.FALSE;        //蓝牙扫描 flag
@@ -73,27 +90,14 @@ public class BleActivity extends AppCompatActivity {
 //                Log.d("debug", "NAME: " + btName + " ADDR: "+btAddr);
 
 
-                String data = " ADDR: "+btAddr;
-                if(list_ble_scan.contains(data) == false)
-                    list_ble_scan.add(data);             //扫描结果无此项 添加到列表
-                    btAddrList.add( device.getAddress());
+                String data = "NAME: " + btName + " ADDR: "+btAddr;
+                if(list_ble_scan.contains(data) == false)            //扫描结果无此项 添加到列表
+                {
+                    list_ble_scan.add(data);                        //添加到表
+                    btAddrList.add( btAddr);
+                    btNameList.add( btName);
                     btDevList.add(device);
-//            }
-
-//            if (device.getName().equals(DEV_NAME.toString())) {
-//                btDevice = device;
-//                Log.d("debug", "找到目标");
-//                mBluetoothAdapter.stopLeScan(mLeScanCallback);
-//                Toast.makeText(BleActivity.this, "搜索到目标ble", Toast.LENGTH_SHORT).show();
-//                //return;         //找到匹配的设备
-//            }
-
-
-//            else
-//            {
-//                btDevice = null;
-//                Log.d("debug", "未找到");
-//            }
+                }
         }
     };
 
@@ -112,7 +116,57 @@ public class BleActivity extends AppCompatActivity {
                 Log.d("debug", "连接失败-->" + status);
             }
         }
+
+        //UUID搜索成功回调
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            Log.d("onCharacteristicWrite", "UUID搜索成功回调");
+            if (status == BluetoothGatt.GATT_SUCCESS) {             //GATT获取成功
+                gatt.requestMtu(512);           //设置MTU值
+                List<BluetoothGattService> supportedGattServices =
+                        mBluetoothGatt.getServices(); //获取服务列表
+                for (int i = 0; i < supportedGattServices.size(); i++)
+                {
+                    Log.i("success", "1:BluetoothGattService UUID=:" +
+                            supportedGattServices.get(i).getUuid());
+                    List<BluetoothGattCharacteristic> listGattCharacteristic =
+                            supportedGattServices.get(i).getCharacteristics();      //获取特征值列表
+                    for (int j = 0; j < listGattCharacteristic.size(); j++)         //特征值打印
+                    {
+                        Log.i("success", "2:   BluetoothGattCharacteristic UUID=:" +
+                                listGattCharacteristic.get(j).getUuid());
+                    }
+                }
+            } else
+            {
+                Log.e("fail", "onservicesdiscovered收到: " + status);
+            }
+
+            mBluetoothGattService = mBluetoothGatt.getService(UUID.fromString(SERVICESUUID));
+            assert(mBluetoothGattService != null);
+            //数据写入char
+            mWriteCharacteristic = mBluetoothGattService.getCharacteristic(UUID.fromString(WRITEUUID));
+            assert(mWriteCharacteristic != null);
+//            gatt.setCharacteristicNotification(notifyCharacteristic,true);
+            //数据接收 notify char
+            mNotifyCharacteristic = mBluetoothGattService.getCharacteristic(UUID.fromString(NOTIFYUUID));
+            //开启 notify监听
+            gatt.setCharacteristicNotification(mNotifyCharacteristic,true);
+        }
+
+        //数据接收回调
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+//            String value = characteristic.getValue().toString();
+            byte[] value = characteristic.getValue();
+            String str_tmp = new String(value);
+            Log.e("BLE ReceiveSuccess:", bytesHexStrTranslate.bytesToHexFun1(value));
+            Log.e("------------<", str_tmp);
+//            edit_get_ble_data.setText(value.toString());
+        }
+
+
     };
+
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,11 +179,16 @@ public class BleActivity extends AppCompatActivity {
         btn_scan_ble = (Button) findViewById(R.id.acBtn_ble_scan);
         btn_connect_ble = (Button) findViewById(R.id.acBtn_ble_connect);
         btn_disconnect_ble = (Button) findViewById(R.id.acBtn_ble_disconnect);
+        btn_send_ble = (Button) findViewById(R.id.acBtn_ble_send);
+        edit_send_ble_data = (EditText) findViewById(R.id.acTxtView_ble_sendData);
+        edit_get_ble_data = (EditText) findViewById(R.id.acTxtView_ble_getData);
+
 
         mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
 
         listView_ble_scan = (ListView) findViewById(R.id.acLstView_ble_list);
+
 
 
         /*listview触发*/
@@ -141,8 +200,26 @@ public class BleActivity extends AppCompatActivity {
                 String addr = list_ble_scan.get(i);
                 check_scan_list_id = i;
                 btDevice = btDevList.get(i);
-//                Log.d("debug", "--------------> : " + addr);
+                Log.d("debug", "get device name--------> : " + btNameList.get(i));
                 Toast.makeText(BleActivity.this, "MAC : " + btAddrList.get(i), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_send_ble.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String data = edit_send_ble_data.getText().toString();
+                Toast.makeText(BleActivity.this, "btn check data: " +data, Toast.LENGTH_SHORT).show();
+
+                if(deviceConFlag)           //设备已连接
+                {
+                    Log.d("debug", "data : " + data);
+//                    byte[] mybyte = bytesHexStrTranslate.StringtoBytes(res);
+                    mWriteCharacteristic.setValue(data);
+                    mWriteCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+                    mBluetoothGatt.writeCharacteristic(mWriteCharacteristic);
+//                    BluetoothGattCharacteristic.setValue
+                }
             }
         });
 
@@ -266,5 +343,52 @@ public class BleActivity extends AppCompatActivity {
 
 
 
+    }
+}
+class BytesHexStrTranslate {
+    private static final char[] HEX_CHAR = {'0', '1', '2', '3', '4', '5',
+            '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    public static String bytesToHexFun1(byte[] bytes) {
+        // 一个byte为8位，可用两个十六进制位标识
+        char[] buf = new char[bytes.length * 2];
+        int a = 0;
+        int index = 0;
+        for(byte b : bytes) { // 使用除与取余进行转换
+            if(b < 0) {
+                a = 256 + b;
+            } else {
+                a = b;
+            }
+            buf[index++] = HEX_CHAR[a / 16];
+            buf[index++] = HEX_CHAR[a % 16];
+        }
+        return new String(buf);
+    }
+    public static String bytesToHexFun2(byte[] bytes) {
+        char[] buf = new char[bytes.length * 2];
+        int index = 0;
+        for(byte b : bytes) { // 利用位运算进行转换，可以看作方法一的变种
+            buf[index++] = HEX_CHAR[b >>> 4 & 0xf];
+            buf[index++] = HEX_CHAR[b & 0xf];
+        }
+        return new String(buf);
+    }
+    public static String bytesToHexFun3(byte[] bytes) {
+        StringBuilder buf = new StringBuilder(bytes.length * 2);
+        for(byte b : bytes) { // 使用String的format方法进行转换
+            buf.append(String.format("%02x", new Integer(b & 0xff)));
+        }
+        return buf.toString();
+    }
+    public static byte[] StringtoBytes(String str) {
+        if(str == null || str.trim().equals("")) {
+            return new byte[0];
+        }
+        byte[] bytes = new byte[str.length() / 2];
+        for(int i = 0; i < str.length() / 2; i++) {
+            String subStr = str.substring(i * 2, i * 2 + 2);
+            bytes[i] = (byte) Integer.parseInt(subStr, 16);
+        }
+        return bytes;
     }
 }

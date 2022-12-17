@@ -52,11 +52,44 @@
         android:layout_below="@id/acBtn_ble_connect">
     </Button>
 
+
+    <EditText
+        android:id="@+id/acTxtView_ble_sendData"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/acBtn_ble_disconnect"
+        android:textSize="16sp"
+        android:textColor="#FFAD33"
+
+        android:hint="发送的数据"
+        android:layout_marginTop="10dp">
+    </EditText>
+
+    <Button
+        android:id="@+id/acBtn_ble_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/acTxtView_ble_sendData"
+        android:layout_alignParentEnd="true"
+        android:text="发送"></Button>
+
+    <EditText
+        android:id="@+id/acTxtView_ble_getData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/acBtn_ble_send"
+        android:textSize="16sp"
+        android:textColor="#FFAD33"
+
+        android:hint="接收数据"
+        android:layout_marginTop="10dp">
+    </EditText>
+
     <ListView
         android:id="@+id/acLstView_ble_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_below="@id/acBtn_ble_disconnect" />
+        android:layout_below="@id/acTxtView_ble_getData" />
 
 </RelativeLayout>
