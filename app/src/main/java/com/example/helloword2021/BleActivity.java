@@ -26,6 +26,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.view.View.OnClickListener;
+
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,11 +54,14 @@ public class BleActivity extends AppCompatActivity {
     private BluetoothGattService mBluetoothGattService;
     private BluetoothGattCharacteristic  mWriteCharacteristic;
     private BluetoothGattCharacteristic  mNotifyCharacteristic;
-    //    BluetoothGattService  mBluetoothGattService
+
     private String SERVICESUUID = "00000002-0000-1000-8000-00805f9b34fb";
     private String WRITEUUID = "00002a00-0000-1000-8000-00805f9b34fb";
     private String NOTIFYUUID = "00002a00-0000-1000-8000-00805f9b34fb";
-//    00002aba-0000-1000-8000-00805f9b34fb
+
+//    private String SERVICESUUID = "0000fffe-0000-1000-8000-00805f9b34fb";
+//    private String WRITEUUID = "0000fff2-0000-1000-8000-00805f9b34fb";
+//    private String NOTIFYUUID = "0000fff2-0000-1000-8000-00805f9b34fb";
 
     private List btNameList = null;
     private List btAddrList = null;
@@ -121,7 +126,7 @@ public class BleActivity extends AppCompatActivity {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             Log.d("onCharacteristicWrite", "UUID搜索成功回调");
             if (status == BluetoothGatt.GATT_SUCCESS) {             //GATT获取成功
-                gatt.requestMtu(512);           //设置MTU值
+                gatt.requestMtu(35);           //设置MTU值
                 List<BluetoothGattService> supportedGattServices =
                         mBluetoothGatt.getServices(); //获取服务列表
                 for (int i = 0; i < supportedGattServices.size(); i++)
@@ -158,12 +163,26 @@ public class BleActivity extends AppCompatActivity {
 //            String value = characteristic.getValue().toString();
             byte[] value = characteristic.getValue();
             String str_tmp = new String(value);
-            Log.e("BLE ReceiveSuccess:", bytesHexStrTranslate.bytesToHexFun1(value));
+//            Log.e("BLE ReceiveSuccess:", bytesHexStrTranslate.bytesToHexFun1(value));
             Log.e("------------<", str_tmp);
-//            edit_get_ble_data.setText(value.toString());
+
+
+            edit_get_ble_data.setText(str_tmp);
         }
 
+        //数据写入回调
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status){
+            super.onCharacteristicWrite(gatt, characteristic, status);
 
+            if(status == BluetoothGatt.GATT_SUCCESS)
+            {
+                Log.e("------------>","send message successful\r\n");
+            }
+            else
+            {
+                Log.e("------------<","send message error\r\n");
+            }
+        }
     };
 
 
@@ -183,12 +202,10 @@ public class BleActivity extends AppCompatActivity {
         edit_send_ble_data = (EditText) findViewById(R.id.acTxtView_ble_sendData);
         edit_get_ble_data = (EditText) findViewById(R.id.acTxtView_ble_getData);
 
-
         mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
 
         listView_ble_scan = (ListView) findViewById(R.id.acLstView_ble_list);
-
 
 
         /*listview触发*/
@@ -211,12 +228,18 @@ public class BleActivity extends AppCompatActivity {
                 String data = edit_send_ble_data.getText().toString();
                 Toast.makeText(BleActivity.this, "btn check data: " +data, Toast.LENGTH_SHORT).show();
 
+                Log.d("debug", "data : " + data);
+//                    byte[] mybyte = bytesHexStrTranslate.StringtoBytes(data);
+//                byte[] mybyte = data.getBytes();
+                char[] mychararray = data.toCharArray();
+                Log.d("debug", "--------------->String to byte :" + mychararray[0] + " "+mychararray[1] );
+
                 if(deviceConFlag)           //设备已连接
                 {
-                    Log.d("debug", "data : " + data);
-//                    byte[] mybyte = bytesHexStrTranslate.StringtoBytes(res);
+
+
                     mWriteCharacteristic.setValue(data);
-                    mWriteCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+                    mWriteCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);          /*支持数据相应 系统自动分包*/
                     mBluetoothGatt.writeCharacteristic(mWriteCharacteristic);
 //                    BluetoothGattCharacteristic.setValue
                 }
